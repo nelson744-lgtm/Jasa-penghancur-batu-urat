@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Nada - Music &amp; Video</title>
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --surface-2: #1c1c1c;
+      --border: #2a2a2a;
+      --text: #ffffff;
+      --text-muted: #a0a0a0;
+      --accent: #c9a227;
+      --accent-soft: rgba(201, 162, 39, 0.15);
+      --player-bg: #111111;
+      --radius: 14px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 90px;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 16px 10px 42px;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .icon-btn:active {
+      background: var(--surface-2);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      padding: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title span {
+      color: var(--text);
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    /* ===== VIDEO PLAYER ===== */
+    .player-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .player-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .player-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+      color: var(--text-muted);
+      gap: 12px;
+    }
+
+    .player-placeholder svg {
+      opacity: 0.4;
+    }
+
+    /* ===== RESULTS GRID ===== */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .video-card {
+      background: var(--surface);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .video-card:active {
+      transform: scale(0.97);
+    }
+
+    .video-card.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .thumb-wrap {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #222;
+      overflow: hidden;
+    }
+
+    .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .duration {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .card-info {
+      padding: 10px;
+    }
+
+    .card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .card-channel {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== BOTTOM MINI PLAYER ===== */
+    .mini-player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--player-bg);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 200;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .mini-player.show {
+      transform: translateY(0);
+    }
+
+    .mini-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #333;
+      flex-shrink: 0;
+    }
+
+    .mini-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mini-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-channel {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .mini-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .control-btn.play {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* ===== EMPTY / LOADING ===== */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state h3 {
+      color: var(--text);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 600px) {
+      .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo" onclick="location.reload()">Nada</a>
+    
+    <div class="search-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Cari lagu, DJ, atau artis..." autocomplete="off">
+    </div>
+
+    <div class="header-actions">
+      <!-- Tombol Unduh File Halaman HTML -->
+      <button class="icon-btn" title="Unduh Halaman Ini" onclick="downloadPage()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+      </button>
+
+      <button class="icon-btn" title="Mode Video" onclick="toggleMode()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="14" rx="2"></rect>
+          <path d="m10 9 5 3-5 3z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- PLAYER -->
+    <div class="player-container" id="playerContainer">
+      <div class="player-placeholder" id="playerPlaceholder" style="display: none;">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.5 8.5v7l6-3.5-6-3.5z"></path>
+        </svg>
+        <p>Pilih video untuk diputar</p>
+      </div>
+      <div id="ytPlayer" style="display: block; width: 100%; height: 100%;">
+        <iframe src="https://www.youtube.com/embed/OPf0YbXqDm0?autoplay=1&amp;rel=0&amp;modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="section-title">
+      <div>Hasil untuk “<span id="searchQuery">dj viral</span>”</div>
+      <div id="resultCount">12 video</div>
+    </div>
+
+    <div class="results-grid" id="resultsGrid">
+        <div class="video-card" data-id="dQw4w9WgXcQ" onclick="playVideo('dQw4w9WgXcQ')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="DJ CAMPURAN VIRAL TIKTOK 2026 FULL BASS" loading="lazy">
+            <span class="duration">49:34</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ CAMPURAN VIRAL TIKTOK 2026 FULL BASS</div>
+            <div class="card-channel">DJ Xavier Team</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="kJQP7kiw5Fk" onclick="playVideo('kJQP7kiw5Fk')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg" alt="KUMPULAN DJ VIRAL TIKTOK TERBARU 2026" loading="lazy">
+            <span class="duration">59:59</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">KUMPULAN DJ VIRAL TIKTOK TERBARU 2026</div>
+            <div class="card-channel">DJ Pinky Official</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="9bZkp7q19f0" onclick="playVideo('9bZkp7q19f0')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="DJ BLACK HOLE BREAKBEAT FULL BASS" loading="lazy">
+            <span class="duration">45:12</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ BLACK HOLE BREAKBEAT FULL BASS</div>
+            <div class="card-channel">DJ Kane FYP</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="fJ9rUzIMcZQ" onclick="playVideo('fJ9rUzIMcZQ')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/fJ9rUzIMcZQ/hqdefault.jpg" alt="DJ TIKTOK VIRAL 2026 MENGENE" loading="lazy">
+            <span class="duration">38:20</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ TIKTOK VIRAL 2026 MENGENE</div>
+            <div class="card-channel">Sound DJ Kane</div>
+          </div>
+        </div>
+      
+        <div class="video-card active" data-id="OPf0YbXqDm0" onclick="playVideo('OPf0YbXqDm0')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg" alt="DJ EH BUSET GUE KAGET JANTUNG" loading="lazy">
+            <span class="duration">52:10</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ EH BUSET GUE KAGET JANTUNG</div>
+            <div class="card-channel">DJ Viral TikTok</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="RgKAFK5djSk" onclick="playVideo('RgKAFK5djSk')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/RgKAFK5djSk/hqdefault.jpg" alt="DJ KICAU KICAU MANIA FULL BASS" loading="lazy">
+            <span class="duration">41:45</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ KICAU KICAU MANIA FULL BASS</div>
+            <div class="card-channel">DJ Remix Indo</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="hT_nvWreIhg" onclick="playVideo('hT_nvWreIhg')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/hT_nvWreIhg/hqdefault.jpg" alt="DJ SLOW BASS VIRAL 2026" loading="lazy">
+            <span class="duration">55:30</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ SLOW BASS VIRAL 2026</div>
+            <div class="card-channel">DJ Night Ride</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="YQHsXMglC9A" onclick="playVideo('YQHsXMglC9A')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/YQHsXMglC9A/hqdefault.jpg" alt="DJ JEDAG JEDUG TIKTOK TERBARU" loading="lazy">
+            <span class="duration">47:18</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ JEDAG JEDUG TIKTOK TERBARU</div>
+            <div class="card-channel">Bass Boost ID</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="pRpeEdMmmQ0" onclick="playVideo('pRpeEdMmmQ0')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/pRpeEdMmmQ0/hqdefault.jpg" alt="DJ ANGKLUNG SLOW 2026" loading="lazy">
+            <span class="duration">33:22</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ ANGKLUNG SLOW 2026</div>
+            <div class="card-channel">Traditional Remix</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="JGwWNGJdvx8" onclick="playVideo('JGwWNGJdvx8')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg" alt="DJ FULL ALBUM VIRAL TIKTOK" loading="lazy">
+            <span class="duration">1:12:40</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ FULL ALBUM VIRAL TIKTOK</div>
+            <div class="card-channel">DJ Collection</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="CevxZvSJLk8" onclick="playVideo('CevxZvSJLk8')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/CevxZvSJLk8/hqdefault.jpg" alt="DJ BREAKBEAT MALAYSIA 2026" loading="lazy">
+            <span class="duration">50:05</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ BREAKBEAT MALAYSIA 2026</div>
+            <div class="card-channel">DJ Malaysia Official</div>
+          </div>
+        </div>
+      
+        <div class="video-card" data-id="09R8_2nJtjg" onclick="playVideo('09R8_2nJtjg')">
+          <div class="thumb-wrap">
+            <img src="https://i.ytimg.com/vi/09R8_2nJtjg/hqdefault.jpg" alt="DJ PARTY NIGHT FULL BASS" loading="lazy">
+            <span class="duration">44:50</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">DJ PARTY NIGHT FULL BASS</div>
+            <div class="card-channel">Night Club Remix</div>
+          </div>
+        </div>
+      </div>
+  </main>
+
+  <!-- MINI PLAYER -->
+  <div class="mini-player show" id="miniPlayer">
+    <img class="mini-thumb" id="miniThumb" src="https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg" alt="">
+    <div class="mini-info">
+      <div class="mini-title" id="miniTitle">DJ EH BUSET GUE KAGET JANTUNG</div>
+      <div class="mini-channel" id="miniChannel">DJ Viral TikTok</div>
+    </div>
+    <div class="mini-controls">
+      <button class="control-btn" onclick="togglePlay()" id="playBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"></path></svg></button>
+    </div>
+  </div>
+
+  <script>
+    // ===== SAMPLE DATA (DJ / Viral style) =====
+    const sampleVideos = [
+      {
+        id: "dQw4w9WgXcQ",
+        title: "DJ CAMPURAN VIRAL TIKTOK 2026 FULL BASS",
+        channel: "DJ Xavier Team",
+        duration: "49:34",
+        thumb: "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+      },
+      {
+        id: "kJQP7kiw5Fk",
+        title: "KUMPULAN DJ VIRAL TIKTOK TERBARU 2026",
+        channel: "DJ Pinky Official",
+        duration: "59:59",
+        thumb: "https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg"
+      },
+      {
+        id: "9bZkp7q19f0",
+        title: "DJ BLACK HOLE BREAKBEAT FULL BASS",
+        channel: "DJ Kane FYP",
+        duration: "45:12",
+        thumb: "https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg"
+      },
+      {
+        id: "fJ9rUzIMcZQ",
+        title: "DJ TIKTOK VIRAL 2026 MENGENE",
+        channel: "Sound DJ Kane",
+        duration: "38:20",
+        thumb: "https://i.ytimg.com/vi/fJ9rUzIMcZQ/hqdefault.jpg"
+      },
+      {
+        id: "OPf0YbXqDm0",
+        title: "DJ EH BUSET GUE KAGET JANTUNG",
+        channel: "DJ Viral TikTok",
+        duration: "52:10",
+        thumb: "https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg"
+      },
+      {
+        id: "RgKAFK5djSk",
+        title: "DJ KICAU KICAU MANIA FULL BASS",
+        channel: "DJ Remix Indo",
+        duration: "41:45",
+        thumb: "https://i.ytimg.com/vi/RgKAFK5djSk/hqdefault.jpg"
+      },
+      {
+        id: "hT_nvWreIhg",
+        title: "DJ SLOW BASS VIRAL 2026",
+        channel: "DJ Night Ride",
+        duration: "55:30",
+        thumb: "https://i.ytimg.com/vi/hT_nvWreIhg/hqdefault.jpg"
+      },
+      {
+        id: "YQHsXMglC9A",
+        title: "DJ JEDAG JEDUG TIKTOK TERBARU",
+        channel: "Bass Boost ID",
+        duration: "47:18",
+        thumb: "https://i.ytimg.com/vi/YQHsXMglC9A/hqdefault.jpg"
+      },
+      {
+        id: "pRpeEdMmmQ0",
+        title: "DJ ANGKLUNG SLOW 2026",
+        channel: "Traditional Remix",
+        duration: "33:22",
+        thumb: "https://i.ytimg.com/vi/pRpeEdMmmQ0/hqdefault.jpg"
+      },
+      {
+        id: "JGwWNGJdvx8",
+        title: "DJ FULL ALBUM VIRAL TIKTOK",
+        channel: "DJ Collection",
+        duration: "1:12:40",
+        thumb: "https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg"
+      },
+      {
+        id: "CevxZvSJLk8",
+        title: "DJ BREAKBEAT MALAYSIA 2026",
+        channel: "DJ Malaysia Official",
+        duration: "50:05",
+        thumb: "https://i.ytimg.com/vi/CevxZvSJLk8/hqdefault.jpg"
+      },
+      {
+        id: "09R8_2nJtjg",
+        title: "DJ PARTY NIGHT FULL BASS",
+        channel: "Night Club Remix",
+        duration: "44:50",
+        thumb: "https://i.ytimg.com/vi/09R8_2nJtjg/hqdefault.jpg"
+      }
+    ];
+
+    let currentVideo = null;
+    let isPlaying = false;
+
+    // ===== RENDER RESULTS =====
+    function renderResults(videos, query = "dj viral") {
+      const grid = document.getElementById("resultsGrid");
+      document.getElementById("searchQuery").textContent = query;
+      document.getElementById("resultCount").textContent = videos.length + " video";
+
+      grid.innerHTML = videos.map(v => `
+        <div class="video-card" data-id="${v.id}" onclick="playVideo('${v.id}')">
+          <div class="thumb-wrap">
+            <img src="${v.thumb}" alt="${v.title}" loading="lazy" />
+            <span class="duration">${v.duration}</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">${v.title}</div>
+            <div class="card-channel">${v.channel}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // ===== PLAY VIDEO =====
+    function playVideo(id) {
+      const video = sampleVideos.find(v => v.id === id) || sampleVideos[0];
+      currentVideo = video;
+
+      // Update active card
+      document.querySelectorAll(".video-card").forEach(card => {
+        card.classList.toggle("active", card.dataset.id === id);
+      });
+
+      // Show YouTube embed
+      const placeholder = document.getElementById("playerPlaceholder");
+      const ytPlayer = document.getElementById("ytPlayer");
+
+      placeholder.style.display = "none";
+      ytPlayer.style.display = "block";
+      ytPlayer.innerHTML = `
+        <iframe 
+          src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      `;
+
+      // Update mini player
+      document.getElementById("miniThumb").src = video.thumb;
+      document.getElementById("miniTitle").textContent = video.title;
+      document.getElementById("miniChannel").textContent = video.channel;
+      document.getElementById("miniPlayer").classList.add("show");
+
+      isPlaying = true;
+      updatePlayButton();
+    }
+
+    // ===== SEARCH =====
+    function handleSearch() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      if (!query) {
+        renderResults(sampleVideos, "dj viral");
+        return;
+      }
+
+      // Simple filter on sample data (demo purpose)
+      const filtered = sampleVideos.filter(v => 
+        v.title.toLowerCase().includes(query) || 
+        v.channel.toLowerCase().includes(query)
+      );
+
+      if (filtered.length > 0) {
+        renderResults(filtered, query);
+      } else {
+        // Fallback: still show all + change title
+        renderResults(sampleVideos, query);
+      }
+    }
+
+    // ===== PLAY / PAUSE (visual only for demo) =====
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      updatePlayButton();
+    }
+
+    function updatePlayButton() {
+      const btn = document.getElementById("playBtn");
+      if (isPlaying) {
+        btn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>`;
+      } else {
+        btn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+      }
+    }
+
+    function toggleMode() {
+      alert("Mode Video aktif");
+    }
+
+    // ===== FUNCTION DOWNLOAD FILE HTML =====
+    function downloadPage() {
+      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ===== INIT =====
+    document.getElementById("searchInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleSearch();
+    });
+
+    // Load default results
+    renderResults(sampleVideos);
+  </script>
+
+</body></html>
