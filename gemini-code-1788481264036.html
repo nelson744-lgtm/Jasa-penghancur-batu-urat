@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jasa Penghancur & Penggilingan Batu Urat</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            padding: 3.5rem 1.5rem;
+            text-align: center;
+            border-bottom: 4px solid #25D366;
+        }
+
+        .header-logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem auto;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+
+        .header-logo svg {
+            width: 36px;
+            height: 36px;
+            fill: #ffffff;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.75rem;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: -2rem auto 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .service-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .service-details {
+            padding: 2.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #dcfce7;
+            color: #166534;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .service-title {
+            font-size: 1.75rem;
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .service-description {
+            margin-bottom: 1.75rem;
+            color: #475569;
+            font-size: 1.05rem;
+        }
+
+        .service-details h3 {
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 1.5rem 0;
+            padding-left: 0;
+        }
+
+        .features-list li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+            color: #334155;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            background-color: #dcfce7;
+            color: #16a34a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .btn-whatsapp-inline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #25D366 0%, #1da851 100%);
+            color: #fff;
+            padding: 1.1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+            margin-top: 2rem;
+        }
+
+        .btn-whatsapp-inline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Tombol WA Melayang Kanan Tengah */
+        .float-wa {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background-color: #25D366;
+            color: #FFF;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: -4px 10px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 12px 18px 12px 14px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: pulse-right 2s infinite;
+        }
+
+        .float-wa:hover {
+            background-color: #1da851;
+            padding-right: 24px;
+            box-shadow: -6px 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .float-wa svg {
+            width: 22px;
+            height: 22px;
+            fill: #FFF;
+            margin-right: 8px;
+        }
+
+        @keyframes pulse-right {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- Logo Keren Khas Industri/Pertambangan -->
+        <div class="header-logo">
+            <svg viewBox="0 0 24 24">
+                <path d="M19 6h-2c0-2.21-1.79-4-4-4S9 3.79 9 6H7c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 15H7V8h2v2h2V8h2v2h2V8h2v11z"/>
+            </svg>
+        </div>
+        <h1>Jasa Penghancur & Penggilingan Batu Urat</h1>
+        <p>Layanan Pengolahan Batu Kuarsa & Batuan Tambang Cepat, Efisien, dan Profesional</p>
+    </header>
+
+    <div class="container">
+        <div class="service-card">
+            <div class="service-details">
+                <span class="badge">Layanan Spesialis Tambang</span>
+                <h2 class="service-title">Penghancuran Batu Urat / Stone Crusher On-Site & Off-Site</h2>
+                <p class="service-description">
+                    Kami menyediakan layanan <strong>jasa penghancuran dan penggilingan batu urat</strong> (kuarsa, emas, dan batuan keras tambang) menggunakan mesin pemecah batu heavy-duty. Kami siap membantu mengolah batuan mentah Anda menjadi ukuran yang diinginkan dengan target tonase harian.
+                </p>
+
+                <h3>Keunggulan Layanan Kami:</h3>
+                <ul class="features-list">
+                    <li><strong>Kapasitas Pengolahan Tinggi:</strong> Mampu memproses belasan hingga puluhan ton per hari.</li>
+                    <li><strong>Mesin Andal & Terawat:</strong> Didukung mesin crusher heavy-duty untuk hasil gilingan yang presisi.</li>
+                    <li><strong>Tim Operator Berpengalaman:</strong> Dikerjakan langsung oleh teknisi dan operator tambang ahli.</li>
+                    <li><strong>Sistem Kerjasama Fleksibel:</strong> Melayani borongan per ton, harian, atau kontrak jangka panjang.</li>
+                </ul>
+
+                <a href="#" target="_blank" class="btn-whatsapp-inline waLink">
+                    Konsultasi & Order Jasa via WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol Floating WhatsApp di Sisi Kanan Tengah -->
+    <a href="#" target="_blank" class="float-wa waLink">
+        <svg viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+        </svg>
+        Chat WA
+    </a>
+
+    <footer>
+        &copy; 2026 Jasa Penggilingan Batu Urat. All Rights Reserved.
+    </footer>
+
+    <script>
+        const whatsappNumber = "6285187328881"; 
+        const defaultMessage = encodeURIComponent("Halo, saya ingin bertanya dan berkonsultasi mengenai Jasa Penghancur / Penggilingan Batu Urat.");
+        
+        const fullWaUrl = `https://wa.me/${whatsappNumber}?text=${defaultMessage}`;
+        const waButtons = document.querySelectorAll(".waLink");
+        
+        waButtons.forEach(button => {
+            button.href = fullWaUrl;
+        });
+    </script>
+
+</body>
+</html>
